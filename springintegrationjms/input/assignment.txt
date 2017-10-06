@@ -1,0 +1,9 @@
+1) read json file using file adapter
+2) one record become one msg using splitter
+3) convert that msg into java object using trasformer
+4) all records of same state should be gather together(aggreagate records as per state)
+5) create json files as per statewise of similar type
+6) use trasformer
+
+
+(use priority queue if the (data)population is large)
