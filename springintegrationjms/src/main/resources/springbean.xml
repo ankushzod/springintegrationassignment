@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.0.xsd">
+	<context:annotation-config />
+	<context:component-scan base-package="com.springwithqueue.service" />
+
+	<int:channel id="queueChannel">
+		<int:queue capacity="5" />
+	</int:channel>
+
+
+	<int:service-activator input-channel="queueChannel"
+		ref="queueService">
+		<int:poller fixed-delay="10" />
+	</int:service-activator>
+
+
+	<int:channel id="priorityChannel">
+		<!-- <int:priority-queue capacity="5" comparator="cityComparator"/> -->
+		<int:priority-queue capacity="5" />
+	</int:channel>
+	<int:service-activator input-channel="priorityChannel"
+		ref="priorityChannelService">
+		<int:poller fixed-delay="100" />
+	</int:service-activator>
+
+	<int:publish-subscribe-channel id="pubsubChannelB" />
+	<int:channel id="directChannelB" />
+	<int:bridge input-channel="pubsubChannelB" output-channel="directChannelB" />
+	<int:service-activator input-channel="directChannelB"
+		ref="bridgeService" />
+
+</beans>
